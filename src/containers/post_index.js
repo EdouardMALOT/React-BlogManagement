@@ -10,13 +10,33 @@ class PostIndex extends React.Component {
     this.props.fetchPost();
   }
 
-  render() {
-    console.log('list of posts :', this.props.post)
-    return(
-        <div className="text-xs-right">
-            <Link to='posts/new' className="btn btn-primary">
-                Add a post
+  renderPosts() {
+    console.log('list of posts :', this.props.posts)
+    return this.props.posts.map( (post) => {
+        return (
+          <li className="list-group-item" key={post.id}>
+            <Link to={`/posts/${post.id}`}>
+              <span className="pull-xs-right">{post.categories}</span>
+              <strong>{post.title}</strong>
             </Link>
+          </li>
+        );
+    });
+  }
+
+  render() {
+
+    return(
+        <div>
+            <div className="text-xs-right">
+                <Link to='posts/new' className="btn btn-primary">
+                    Add a post
+                </Link>
+            </div>
+            <h3>Posts</h3>
+            <ul className="list-group">
+              {this.renderPosts()}
+            </ul>
         </div>
     );
   }
@@ -24,11 +44,11 @@ class PostIndex extends React.Component {
 
 
 function mapStateToProps(state) {
-  return {post : state.post}
+  return {posts : state.post.all}
 }
 
 // function mapDispatchToProps(dispatch) {
 //   return bindActionCreators({fetchPost}, dispatch);
 // }
 
-export default connect(null,{fetchPost})(PostIndex);
+export default connect(mapStateToProps,{fetchPost})(PostIndex);
